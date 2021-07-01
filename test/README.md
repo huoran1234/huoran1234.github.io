@@ -19,4 +19,4 @@ Device:         /dev/mst/mt4115_pciconf0
 ----
 ****
 
-![图片alt](图片地址 ''图片title'')
+![图片alt](https://github.com/huoran1234/huoran1234.github.io/blob/master/test/test.jpg ''图片title'')
