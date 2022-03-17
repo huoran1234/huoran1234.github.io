@@ -1,91 +1,75 @@
-<!DOCTYPE html>
-<html><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>What's my IP dude!</title>
-	<style type="text/css">
-		* { margin:0; padding:0; }
-		body { background:#333; color:#efefef; margin-top:50px; }
-		.tools { margin:25px auto; width:960px; }
-		.tools p {
-			margin-left:20px; color:#777; font-family: Georgia,serif;
-			-webkit-text-shadow:0 0 7px #000; -moz-text-shadow:0 0 7px #000; text-shadow:0 0 7px #000;
-			}
-		#ip-lookup { 
-			border:1px solid #aaa; 
-			background-position:50% 50%; background-repeat:repeat-x; background-color:#777;
-			background-image: url(data:image/gif;base64,R0lGODlhAQBWAfcAAHZ2dkVFRXJyck1NTVFRUUVEREpKSnR0dEhISEZGRklJSW1tbVNTU1ZWVnV1dW9vb2lpaUdHR2dnZ2tra0xMTFpaWlBQUFRUVF9fX1VVVFlZWWRkZGBgYEtLS2FhYU5OTl1dXVVVVW5ubnZ1dmpqakZGR2tsbGZmZmJiYnZ1dWNjY0xNTVpbWmxsbFtbW0ZFRkZFRVJSUnBwb15eXlhYWWVlZVdXV05PT09PT1JTUm5vbnNzc3Nyc3BwcHFxcXFwcGppamhoaFhYWF5fXnJxcWhpaWJiY0hISVRUU25tbXV1dmNkY25vb3Rzc1NUU0xLTG1ubnR1dUhHSHV0dGNkZEhHR19eXk5OTXd3dlxdXVdXWHR1dFFRUFxcXU9PUFxbXFdWVlxcXHFxcGFhYmNjYlxdXFhYV3Bvb21sbGNjZGVlZmZmZUxNTFlZWF5dXnBxcFxcW3V2dnR0c1tcW2BfX2JhYlBQUVZXV2hnaFBPT3BxcUhJSElISG5ubXJzc2tqanJzcmZmZ0lKSlhXV1JSUXd2dkdGR2VkZFBQT0tMS2loaGJjY2ZnZmxtbEtLTExMS0lISVtbWkVFRkdGRmRlZGdnaHFxclxbW1FSUUpLSklJSkdHSF9gX2FgYFtaW09OTmtrak9QT1lZWnN0dF5dXVJSU0RFRXN0c2VmZUtMTHNzdGtsa1VVVkRERHd3dwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAABAFYBAAj/AF0JHEiQYCFXABJiSQhgxIg4KUakUOKgYhQHU7Yc2LhxlJxTTVTt2MGDhwA/gASoVGmJiA+Xen6I+fGmRw8ZMs482PmAiQ4dIoJC6ZNkgdEFjdC0aGGi6aoJUCeA+kOCBBCrECAU0QpBUZAgeCpJGCvhBKNAJ9ScWIOqRg1KGw5t2EAljYolKsgYWWQEBYo6KMZ4GNyJg2E6nDAoHmJlyIwZbkCQApEFRJkuYb64gHNpjotInliwqEBalAYNbTTQoCFEiJlBWmzYuAOmge0GrELozsD7gm8GSJwwYJCDeKkYMQgRIIBpOQEuFuxYQGQhj5dQOD7dwHHjg/crA8IPUFgxng2F848cpXqSqIN7AwYywTcgSIF9TfYhIdhzBAEfBFIgUAUCm0RgoCElRFBCAiVMksCDLyQQwAswBACDJAEUEEAApmRYwIethChiiAEBADs=);
-	
-			-webkit-border-radius:11px; -moz-border-radius:11px; border-radius:11px; 
-			-webkit-box-shadow:0 0 11px #111; -moz-box-shadow:0 0 11px #111; box-shadow:0 0 11px #111;
-			}
-		#tools p { font-size:77px; }
-		#more p  { font-size:24px; }
-		#more-info p { font-size:18px; }
-		#more-info ul { margin:20px 0 35px 50px; font-size:18px; color:#ccc; }
-		#more-info li { margin:10px 0; line-height:25px; font-family:Helvetica, Arial; }
-		h1 { 
-			font: 124px/1 Helvetica, Arial; text-align:center; margin:50px 0; color:#efefef;
-			-webkit-text-shadow:0 0 7px #333; -moz-text-shadow:0 0 7px #333; text-shadow:0 0 7px #333;
-			}
-		h1 a:link { color:#efefef; }
-		a:link,a:visited { 
-			color:#777; text-decoration:none; outline:0 none; 
-			-webkit-text-shadow:0 0 7px #000; -moz-text-shadow:0 0 7px #000; text-shadow:0 0 7px #000;
-			}
-		a:hover,a:active { color:#eee; text-decoration:underline; outline:0 none; }
-		li span { 
-			font:16px/1 Monaco,"Panic Sans","Lucida Console","Courier New",Courier,monospace,sans-serif; color:#ccc; 
-			-webkit-text-shadow:0 0 3px #777; -moz-text-shadow:0 0 3px #777; text-shadow:0 0 3px #777;
-			}
-	</style>
-	<body>
-		<div id="tools" class="tools">
-			<p>Your IP:</p>
-		</div>
-		<div id="ip-lookup" class="tools">
-			<h1><?php echo $IP; ?></h1>
-		</div>
-		<div id="more" class="tools">
-			<p><a id="more-link" title="More information" href="javascript:toggle();">More info</a></p>
-		</div>
-		<div id="more-info" class="tools">
-			<ul>
-			<?php 
-				echo '<li><strong>Remote Port:</strong> <span>'.$port.'</span></li>';
-				echo '<li><strong>Request Method:</strong> <span>'.$method.'</span></li>';
-				echo '<li><strong>Server Protocol:</strong> <span>'.$protocol.'</span></li>';
-				echo '<li><strong>Server Host:</strong> <span>'.$host.'</span></li>';
-				echo '<li><strong>User Agent:</strong> <span>'.$agent.'</span></li>'; 
-				if ($proxy) echo '<li><strong>Proxy: <span>'.($proxy) ? $proxy : ''.'</span></li>';
+<!DOCTYPE HTML>
 
-				$time_start = microtime(true);
-				usleep(100);
-				$time_end = microtime(true);
-				$time = $time_end - $time_start;
-			?>
-			</ul>
-			<p><small>It took <?php echo $time; ?> seconds to share this info.</small></p>
-		</div>
-		<script type="text/javascript">
-			function hideStuff(){
-				if (document.getElementById){
-					var x = document.getElementById('more-info');
-					x.style.display="none";
-				}
-			}
-			function toggle(){
-				if (document.getElementById){
-					var x = document.getElementById('more-info');      
-					var y = document.getElementById('more-link');      
-					if (x.style.display == "none"){
-						x.style.display = "";
-						y.innerHTML = "Less info";
-					} else {
-						x.style.display = "none";
-						y.innerHTML = "More info";
-					}
-				}
-			}
-			window.onload = hideStuff;
-		</script>
-	</body>
+<html>
+
+<head>
+  <title>What Is My IP Address ?</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+</head>
+<header>
+</header>
+
+<body>
+  <noscript>
+    <h2>hmm, i guess you disabled JS so please enable it to see the magic! :)</h2>
+    <p>ــــــــــــــــــــــ</p>
+    <p>ــــــــــــــــــــــ</p>
+  </noscript>
+  <div id="IP">
+    <h2>Your Public IP Is: </h2>
+    <h2 id="ip"></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="LOCATION">
+    <button id="find-me">Check Your Location</button><br />
+    <p id="status"></p>
+    <a id="map-link" target="_blank"></a>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="LANGUAGE">
+    <h2>Your Browser's Language Is: <a id="language"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="SCREEN">
+    <h2>Your Screen Size Is: <a id="screen"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="MOBILE">
+    <h2>Are You Mobile User: <a id="mobile"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="COOKIES">
+    <h2>Cookies Enabled: <a id="cookies"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="BROWSER">
+    <h2>Your Browser Is: <a id="browser"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="OS">
+    <h2>Your OS Is: <a id="os"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="USERAGENT">
+    <h2>Your User-Agent Is: <a id="useragent"></a></h2>
+  </div>
+  <p>ــــــــــــــــــــــ</p>
+  <div id="SPEEDTEST">
+    <h2>Your Net Speed Is: <br> <a id="speedtest"></a></h2>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+<footer>
+  <p>ــــــــــــــــــــــ</p>
+  <p>ــــــــــــــــــــــ</p>
+  <h2><a href="https://github.com/EsmailELBoBDev2/Whatismyip">It's Open Source Website</a> & It's Made By <a
+      href="https://esmailelbob.hashbase.io">Esmail EL BoB</a> & <a
+      href="https://github.com/EsmailELBoBDev2/Whatismyip/issues"> Feel Free To Request/Add/Suggest New Ideas</a></h2>
+  <h2><a href="https://github.com/EsmailELBoBDev2/Whatismyip/blob/master/LICENSE">Licensed Under GNU General Public
+      License v3.0</a></h2>
+</footer>
+
 </html>
