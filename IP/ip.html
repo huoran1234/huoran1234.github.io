@@ -1,0 +1,4 @@
+const app = express()
+app.get('/', (req, res) => {
+  res.send(`Your IP address is: ${res.locals.clientip}`)
+})
