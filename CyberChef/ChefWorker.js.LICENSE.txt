@@ -15,7 +15,9 @@
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+/*! js-yaml 4.1.1 https://github.com/nodeca/js-yaml @license MIT */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
@@ -158,7 +160,19 @@
  */
 
 /**
+ * @author Medjedtxm
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
  * @author MikeCAT
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Oshawk [oshawk@protonmail.com]
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
@@ -207,8 +221,20 @@
  */
 
 /**
+ * @author bartblaze []
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
  * @author bmwhitn [brian.m.whitney@outlook.com]
  * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+/**
+ * @author brun0ne [brunonblok@gmail.com]
+ * @copyright Crown Copyright 2023
  * @license Apache-2.0
  */
 
@@ -230,6 +256,24 @@
  * @author bwhitn [brian.m.whitney@outlook.com]
  * @author d98762625 [d98762625@gmailcom]
  * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author c65722 []
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author ccarpo [ccarpo@gmx.net]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * @author d0s1nt [d0s1nt@cyberchefaudio]
+ * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
 
@@ -277,8 +321,26 @@
  */
 
 /**
+ * @author j83305 [awz22@protonmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author jb30795 [jb30795@proton.me]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
  * @author klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author linuxgemini [ilteris@asenkron.com.tr]
+ * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
 
@@ -304,6 +366,19 @@
 /**
  * @author mikecat
  * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mshwed [m@ttshwed.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1073645 [n1073645@gmail.com]
+ * @author k3ach [k3ach@proton.me]
+ * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
 
@@ -384,6 +459,18 @@
  */
 
 /**
+ * @author p-leriche [philip.leriche@cantab.net]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
+ * @author r4mos [2k95ljkhg@mozmail.com]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
  * @author sevzero [sevzero@protonmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -448,6 +535,13 @@
 /**
  * @author tomgond [tom.gonda@gmail.com]
  * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * Base32 resources.
+ *
+ * @author Peter C-S [petercs@purelymail.com]
  * @license Apache-2.0
  */
 
@@ -535,6 +629,14 @@
  */
 
 /**
+ * Byte-reading and text-decoding utilities for audio metadata parsing.
+ *
+ * @author d0s1nt [d0s1nt@cyberchefaudio]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
  * Custom error type for handling Dish type errors.
  * i.e. where the Dish cannot be successfully translated between types
  *
@@ -555,10 +657,10 @@
 /**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016-2024
+ * @copyright Crown Copyright 2016-2026
  * @license Apache-2.0
  *
- *   Copyright 2016-2024 Crown Copyright
+ *   Copyright 2016-2026 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -608,6 +710,14 @@
  */
 
 /**
+ * Format-specific audio metadata parsers.
+ *
+ * @author d0s1nt [d0s1nt@cyberchefaudio]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
  * Hexadecimal functions.
  *
  * @author n1474335 [n1474335@gmail.com]
@@ -631,6 +741,15 @@
  * @author Klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
+ */
+
+/**
+ * Parity Bit functions.
+ *
+ * @author j83305 [awz22@protonmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ *
  */
 
 /**
@@ -659,6 +778,25 @@
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * Pure JavaScript implementation of Bech32 and Bech32m encoding.
+ *
+ * Bech32 is defined in BIP-0173: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
+ * Bech32m is defined in BIP-0350: https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki
+ *
+ * @author Medjedtxm
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
+ * Report skeleton and container detection for audio metadata extraction.
+ *
+ * @author d0s1nt [d0s1nt@cyberchefaudio]
+ * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
 
@@ -701,7 +839,7 @@
 * THIS FILE IS AUTOMATICALLY GENERATED BY src/core/config/scripts/generateConfig.mjs
 *
 * @author n1474335 [n1474335@gmail.com]
-* @copyright Crown Copyright 2024
+* @copyright Crown Copyright 2026
 * @license Apache-2.0
 */
 
@@ -736,4 +874,4 @@
 
 //! moment.js locale configuration
 
-//! version : 0.5.45
+//! version : 0.6.1
