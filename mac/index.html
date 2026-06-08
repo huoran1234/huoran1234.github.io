@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MAC 地址厂商查询</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">IEEE OUI / MA-L / MA-M / MA-S</p>
+          <h1 id="page-title">MAC 地址厂商查询</h1>
+          <p class="intro">
+            支持冒号、短横线、点分、连续十六进制等常见格式，并识别广播、组播、本地管理等特殊地址。
+          </p>
+        </div>
+        <div class="status-panel" aria-live="polite">
+          <span id="sourceStatus" class="status-dot pending"></span>
+          <div>
+            <strong id="sourceTitle">正在加载离线 CSV</strong>
+            <span id="sourceDetail">页面读取 data 目录中的 mam.csv、oui.csv、oui36.csv。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="lookup-grid">
+        <form id="lookupForm" class="tool-panel">
+          <label for="macInput">MAC 地址</label>
+          <div class="input-row">
+            <input
+              id="macInput"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="例如 00:1A:2B:3C:4D:5E 或 001a.2b3c.4d5e"
+            />
+            <button type="submit">查询</button>
+          </div>
+          <div class="examples" aria-label="示例地址">
+            <button type="button" data-example="FF:FF:FF:FF:FF:FF">广播</button>
+            <button type="button" data-example="01:00:5E:00:00:FB">IPv4 组播</button>
+            <button type="button" data-example="02-00-00-00-00-01">本地管理</button>
+            <button type="button" data-example="3C5A-B4D1-9210">短横线</button>
+            <button type="button" data-example="001A.2B3C.4D5E">点分</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="result" class="result empty" aria-live="polite">
+        <p>输入 MAC 地址后开始查询。</p>
+      </section>
+
+      <section class="notes">
+        <h2>支持格式</h2>
+        <ul>
+          <li><code>xxxx-xxxx-xxxx</code>、<code>xx:xx:xx:xx:xx:xx</code>、<code>xx-xx-xx-xx-xx-xx</code></li>
+          <li><code>xxxx.xxxx.xxxx</code>、<code>xxxxxxxxxxxx</code>，大小写均可</li>
+          <li>广播地址、组播地址、本地管理地址会在厂商结果旁单独标记</li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
