@@ -48,6 +48,15 @@
   }
 
   async function loadOfflineCsv() {
+    if (window.location.protocol === "file:") {
+      setStatus(
+        "error",
+        "请通过 HTTP 打开页面",
+        "浏览器会阻止 file:// 页面读取本地 CSV。请使用 GitHub Pages，或在本目录运行本地静态服务器后访问 http://localhost:8099/。"
+      );
+      return;
+    }
+
     setStatus("pending", "正在加载离线 CSV", "页面会读取 data 目录中的 oui36.csv、mam.csv、oui.csv。");
 
     const results = await Promise.allSettled(

@@ -13,3 +13,15 @@ data/oui36.csv
 ```
 
 放好后把 `index.html`、`styles.css`、`app.js`、`data/*.csv` 一起提交到 GitHub Pages 即可使用。
+
+本地测试时不要直接双击打开 `index.html`，因为浏览器会阻止 `file://` 页面读取本地 CSV。请在项目目录启动静态服务器后访问，例如：
+
+```bash
+python -m http.server 8099
+```
+
+然后打开：
+
+```text
+http://localhost:8099/
+```
