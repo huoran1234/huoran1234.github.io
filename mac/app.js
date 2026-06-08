@@ -2,9 +2,9 @@
   "use strict";
 
   const CSV_SOURCES = [
-    { name: "MA-S / OUI-36", path: "data/oui36.csv", bits: 36 },
-    { name: "MA-M / OUI-28", path: "data/mam.csv", bits: 28 },
-    { name: "MA-L / OUI", path: "data/oui.csv", bits: 24 },
+    { name: "MA-S / OUI-36", path: "./data/oui36.csv", bits: 36 },
+    { name: "MA-M / OUI-28", path: "./data/mam.csv", bits: 28 },
+    { name: "MA-L / OUI", path: "./data/oui.csv", bits: 24 },
   ];
 
   const state = {
