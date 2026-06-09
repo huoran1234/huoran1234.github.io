@@ -56,7 +56,7 @@
       return;
     }
 
-    setStatus("pending", "Loading offline CSV", "Loading oui36.csv,mam.csv,oui.csv.");
+    setStatus("pending", "Loading offline CSV", "Loading oui36.csv, mam.csv, oui.csv.");
 
     const results = await Promise.allSettled(
       CSV_SOURCES.map(async (source) => {
@@ -82,11 +82,11 @@
     state.loadedSources = loaded.map((item) => item.source.path);
 
     if (state.entries.length) {
-      const detail = `Loaded ${state.loadedSources.join("、")},totally ${state.entries.length.toLocaleString("zh-CN")} records`;
+      const detail = `Loaded ${state.loadedSources.join(", ")},totally ${state.entries.length.toLocaleString("en-US")} records`;
       setStatus("ready", failures.length ? "Part of CSV loaded" : "Offline CSV ready", failures.length ? `${detail} not loaded：${failures.join("；")}` : detail);
       renderCurrentQuery();
     } else {
-      setStatus("error", "Offline CSV loading failed", `Please check the data folder contained mam.csv,oui.csv,oui36.csv.${failures.join("；")}`);
+      setStatus("error", "Offline CSV loading failed", `Please check the data folder contained mam.csv, oui.csv, oui36.csv.${failures.join("；")}`);
     }
   }
 
@@ -207,7 +207,7 @@
     }
 
     if (compact === "01000CCCCCCC") {
-      notes.push("01:00:0C:CC:CC:CC CDP etc.");
+      notes.push("01:00:0C:CC:CC:CC Cisco CDP etc.");
     }
 
     return { flags, notes };
