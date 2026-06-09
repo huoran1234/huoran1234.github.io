@@ -26,15 +26,15 @@
       .toUpperCase();
 
     if (!compact) {
-      return { error: "请输入 MAC 地址。" };
+      return { error: "Input MAC address." };
     }
 
     if (compact.length !== 12) {
-      return { error: "MAC 地址需要包含 12 个十六进制字符。" };
+      return { error: "The MAC address must consist of 12 hexadecimal characters." };
     }
 
     if (!/^[0-9A-F]{12}$/.test(compact)) {
-      return { error: "MAC 地址只能包含 0-9 与 A-F。" };
+      return { error: "MAC can only consist of 0-9 and A-F." };
     }
 
     const octets = compact.match(/../g);
@@ -51,25 +51,24 @@
     if (window.location.protocol === "file:") {
       setStatus(
         "error",
-        "请通过 HTTP 打开页面",
-        "浏览器会阻止 file:// 页面读取本地 CSV。请使用 GitHub Pages，或在本目录运行本地静态服务器后访问 http://localhost:8099/。"
+        "Please open the web by HTTP",
       );
       return;
     }
 
-    setStatus("pending", "正在加载离线 CSV", "页面会读取 data 目录中的 oui36.csv、mam.csv、oui.csv。");
+    setStatus("pending", "Loading offline CSV", "Loading oui36.csv,mam.csv,oui.csv.");
 
     const results = await Promise.allSettled(
       CSV_SOURCES.map(async (source) => {
         const response = await fetch(source.path, { cache: "default" });
         if (!response.ok) {
-          throw new Error(`${source.path} 返回 HTTP ${response.status}`);
+          throw new Error(`${source.path} Return HTTP ${response.status}`);
         }
 
         const text = await response.text();
         const entries = parseCsv(text, source.bits, source.name);
         if (!entries.length) {
-          throw new Error(`${source.path} 没有可用记录`);
+          throw new Error(`${source.path} No record`);
         }
 
         return { source, entries };
@@ -83,11 +82,11 @@
     state.loadedSources = loaded.map((item) => item.source.path);
 
     if (state.entries.length) {
-      const detail = `已加载 ${state.loadedSources.join("、")}，共 ${state.entries.length.toLocaleString("zh-CN")} 条记录。`;
-      setStatus("ready", failures.length ? "部分 CSV 已加载" : "离线 CSV 已就绪", failures.length ? `${detail} 未加载：${failures.join("；")}` : detail);
+      const detail = `Loaded ${state.loadedSources.join("、")},totally ${state.entries.length.toLocaleString("zh-CN")} records`;
+      setStatus("ready", failures.length ? "Part of CSV loaded" : "Offline CSV ready", failures.length ? `${detail} not loaded：${failures.join("；")}` : detail);
       renderCurrentQuery();
     } else {
-      setStatus("error", "离线 CSV 加载失败", `请确认 data 目录中存在 mam.csv、oui.csv、oui36.csv。${failures.join("；")}`);
+      setStatus("error", "Offline CSV loading failed", `Please check the data folder contained mam.csv,oui.csv,oui36.csv.${failures.join("；")}`);
     }
   }
 
@@ -111,7 +110,7 @@
         prefix: assignment,
         bits: assignment.length * 4 || fallbackBits,
         sourceName,
-        organization: String(row[organizationIndex] || "").trim() || "未提供厂商名称",
+        organization: String(row[organizationIndex] || "").trim() || "No manufacturer name provided",
         address: String(row[addressIndex] || "").trim(),
       });
     }
@@ -172,43 +171,43 @@
     const compact = mac.compact;
 
     if (compact === "FFFFFFFFFFFF") {
-      flags.push({ text: "广播地址", level: "bad" });
-      notes.push("这是以太网广播地址，不代表某个单独设备。");
+      flags.push({ text: "Broadcast", level: "bad" });
+      notes.push("This is ethernet broadcast.");
     }
 
     if ((firstOctet & 1) === 1) {
-      flags.push({ text: "组播 / 群组地址", level: "warn" });
-      notes.push("首字节最低位为 1，表示 I/G 位已置位，属于组播或群组地址。");
+      flags.push({ text: "Multicast", level: "warn" });
+      notes.push("I/G marked.");
     } else {
-      flags.push({ text: "单播地址", level: "good" });
+      flags.push({ text: "Unicast", level: "good" });
     }
 
     if ((firstOctet & 2) === 2) {
-      flags.push({ text: "本地管理", level: "warn" });
-      notes.push("首字节第二低位为 1，表示 U/L 位为本地管理，通常不会有 IEEE 厂商注册记录。");
+      flags.push({ text: "Locally Administered", level: "warn" });
+      notes.push("U/L marked.");
     } else {
-      flags.push({ text: "全球唯一", level: "good" });
+      flags.push({ text: "Globally Unique", level: "good" });
     }
 
     if (compact === "000000000000") {
-      flags.push({ text: "全零地址", level: "warn" });
-      notes.push("全零地址常作为占位、未知或初始化值使用，不应当表示正常网卡。");
+      flags.push({ text: "All zero", level: "warn" });
+      notes.push("Unknows value or initialization value.");
     }
 
     if (compact.startsWith("01005E")) {
-      notes.push("01:00:5E 是 IPv4 组播常见映射前缀。");
+      notes.push("01:00:5E IPv4 multicast prefix.");
     }
 
     if (compact.startsWith("3333")) {
-      notes.push("33:33 是 IPv6 组播常见映射前缀。");
+      notes.push("33:33 is IPv6 multicast prefix.");
     }
 
     if (compact.startsWith("0180C2")) {
-      notes.push("01:80:C2 常用于桥接、生成树、LLDP 等链路层控制协议。");
+      notes.push("01:80:C2 STP,LLDP etc.");
     }
 
     if (compact === "01000CCCCCCC") {
-      notes.push("01:00:0C:CC:CC:CC 常用于 Cisco Discovery Protocol 等协议。");
+      notes.push("01:00:0C:CC:CC:CC CDP etc.");
     }
 
     return { flags, notes };
@@ -228,9 +227,9 @@
 
     const special = inspectSpecial(mac);
     const vendor = findVendor(mac.compact);
-    const vendorName = vendor ? vendor.organization : "未匹配到 IEEE 注册厂商";
-    const source = vendor ? `${vendor.sourceName} / ${vendor.prefix}` : "无匹配记录";
-    const address = vendor && vendor.address ? vendor.address : "无地址信息";
+    const vendorName = vendor ? vendor.organization : "No organization name";
+    const source = vendor ? `${vendor.sourceName} / ${vendor.prefix}` : "No record";
+    const address = vendor && vendor.address ? vendor.address : "No organization address";
 
     result.className = "result";
     result.innerHTML = `
@@ -241,12 +240,12 @@
         </div>
       </div>
       <div class="result-grid">
-        <div class="fact"><span>厂商 / 组织</span><strong>${escapeHtml(vendorName)}</strong></div>
-        <div class="fact"><span>IEEE 匹配</span><strong>${escapeHtml(source)}</strong></div>
-        <div class="fact"><span>注册地址</span><strong>${escapeHtml(address)}</strong></div>
-        <div class="fact"><span>冒号格式</span><strong>${escapeHtml(mac.colon)}</strong></div>
-        <div class="fact"><span>短横线格式</span><strong>${escapeHtml(mac.hyphen)}</strong></div>
-        <div class="fact"><span>点分格式</span><strong>${escapeHtml(mac.dotted)}</strong></div>
+        <div class="fact"><span>Org Name</span><strong>${escapeHtml(vendorName)}</strong></div>
+        <div class="fact"><span>IEEE Match</span><strong>${escapeHtml(source)}</strong></div>
+        <div class="fact"><span>Org Addr</span><strong>${escapeHtml(address)}</strong></div>
+        <div class="fact"><span>Colon</span><strong>${escapeHtml(mac.colon)}</strong></div>
+        <div class="fact"><span>Hyphen</span><strong>${escapeHtml(mac.hyphen)}</strong></div>
+        <div class="fact"><span>Dotted</span><strong>${escapeHtml(mac.dotted)}</strong></div>
       </div>
       ${
         special.notes.length

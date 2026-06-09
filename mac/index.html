@@ -16,44 +16,43 @@
         <div class="status-panel" aria-live="polite">
           <span id="sourceStatus" class="status-dot pending"></span>
           <div>
-            <strong id="sourceTitle">正在加载离线 CSV</strong>
-            <span id="sourceDetail">页面读取 data 目录中的 mam.csv、oui.csv、oui36.csv。</span>
+            <strong id="sourceTitle">Loading Offline CSV</strong>
+            <span id="sourceDetail">Loading mam.csv,oui.csv,oui36.csv.</span>
           </div>
         </div>
       </section>
 
       <section class="lookup-grid">
         <form id="lookupForm" class="tool-panel">
-          <label for="macInput">MAC 地址</label>
+          <label for="macInput">MAC Address</label>
           <div class="input-row">
             <input
               id="macInput"
               autocomplete="off"
               spellcheck="false"
-              placeholder="例如 00:1A:2B:3C:4D:5E 或 001a.2b3c.4d5e"
+              placeholder="e.g. 00:1A:2B:3C:4D:5E or 001a.2b3c.4d5e"
             />
-            <button type="submit">查询</button>
+            <button type="submit">Search</button>
           </div>
           <div class="examples" aria-label="示例地址">
-            <button type="button" data-example="FF:FF:FF:FF:FF:FF">广播</button>
-            <button type="button" data-example="01:00:5E:00:00:FB">IPv4 组播</button>
-            <button type="button" data-example="02-00-00-00-00-01">本地管理</button>
-            <button type="button" data-example="3C5A-B4D1-9210">短横线</button>
-            <button type="button" data-example="001A.2B3C.4D5E">点分</button>
+            <button type="button" data-example="FF:FF:FF:FF:FF:FF">Broadcast</button>
+            <button type="button" data-example="01:00:5E:00:00:FB">IPv4 Multicast</button>
+            <button type="button" data-example="02-00-00-00-00-01">Locally Administered</button>
+            <button type="button" data-example="3C5A-B4D1-9210">Hyphen</button>
+            <button type="button" data-example="001A.2B3C.4D5E">Dot</button>
           </div>
         </form>
       </section>
 
       <section id="result" class="result empty" aria-live="polite">
-        <p>输入 MAC 地址后开始查询。</p>
+        <p>Input MAC to search.</p>
       </section>
 
       <section class="notes">
-        <h2>支持格式</h2>
+        <h2>Support format</h2>
         <ul>
-          <li><code>xxxx-xxxx-xxxx</code>、<code>xx:xx:xx:xx:xx:xx</code>、<code>xx-xx-xx-xx-xx-xx</code></li>
-          <li><code>xxxx.xxxx.xxxx</code>、<code>xxxxxxxxxxxx</code>，大小写均可</li>
-          <li>广播地址、组播地址、本地管理地址会在厂商结果旁单独标记</li>
+          <li><code>xxxx-xxxx-xxxx</code>,<code>xx:xx:xx:xx:xx:xx</code>,<code>xx-xx-xx-xx-xx-xx</code>,<code>xxxx.xxxx.xxxx</code>,<code>xxxxxxxxxxxx</code></li>
+          <li>Broadcast,Multicast,Locally Administratered will be marked after search</li>
         </ul>
       </section>
     </main>
