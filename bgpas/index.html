@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BGP ASN Converter</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f7f9;
+      --fg: #171a20;
+      --muted: #5f6877;
+      --line: #d8dde6;
+      --field: #fff;
+      --accent: #0f766e;
+      --accent-fg: #fff;
+      --bad: #b42318;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #12151b;
+        --fg: #eef2f7;
+        --muted: #a3adbb;
+        --line: #303846;
+        --field: #1b2029;
+        --accent: #2dd4bf;
+        --accent-fg: #082f2a;
+        --bad: #ff8a80;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(720px, 100%);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 7vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+      padding: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 650;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--fg);
+      font: inherit;
+      padding: 10px 12px;
+    }
+
+    input:focus {
+      outline: 3px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      border-color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-height: 40px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      font: inherit;
+      font-weight: 700;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--line);
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 14px;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: var(--bad);
+    }
+
+    @media (max-width: 620px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>BGP ASN Converter</h1>
+    <p>Convert between AS plain integers and dotted 32-bit ASN notation.</p>
+
+    <section class="panel" aria-label="ASN converter">
+      <div class="grid">
+        <div>
+          <label for="plain">Plain ASN</label>
+          <input id="plain" inputmode="numeric" autocomplete="off" placeholder="65546">
+        </div>
+        <div>
+          <label for="dotted">Dotted ASN</label>
+          <input id="dotted" inputmode="numeric" autocomplete="off" placeholder="1.10">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="copy" type="button">Copy result</button>
+        <button id="clear" class="secondary" type="button">Clear</button>
+      </div>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const maxPart = 65535;
+      const maxAsn = 4294967295;
+      const plain = document.getElementById("plain");
+      const dotted = document.getElementById("dotted");
+      const status = document.getElementById("status");
+      const copy = document.getElementById("copy");
+      const clear = document.getElementById("clear");
+      let lastEdited = plain;
+
+      const setStatus = (text, isError = false) => {
+        status.textContent = text;
+        status.classList.toggle("error", isError);
+      };
+
+      const parsePlain = value => {
+        if (!/^\d+$/.test(value)) throw new Error("Plain ASN must be an integer.");
+        const number = Number(value);
+        if (!Number.isSafeInteger(number) || number > maxAsn) {
+          throw new Error("Plain ASN must be between 0 and 4294967295.");
+        }
+        return number;
+      };
+
+      const parseDotted = value => {
+        const match = /^(\d+)\.(\d+)$/.exec(value);
+        if (!match) throw new Error("Dotted ASN must use high.low format.");
+        const high = Number(match[1]);
+        const low = Number(match[2]);
+        if (high > maxPart || low > maxPart) {
+          throw new Error("Both dotted ASN parts must be between 0 and 65535.");
+        }
+        return high * 65536 + low;
+      };
+
+      const toDotted = number => `${Math.floor(number / 65536)}.${number % 65536}`;
+
+      const convertFromPlain = () => {
+        if (!plain.value.trim()) {
+          dotted.value = "";
+          setStatus("");
+          return;
+        }
+        const number = parsePlain(plain.value.trim());
+        dotted.value = toDotted(number);
+        setStatus("Converted from plain ASN.");
+      };
+
+      const convertFromDotted = () => {
+        if (!dotted.value.trim()) {
+          plain.value = "";
+          setStatus("");
+          return;
+        }
+        const number = parseDotted(dotted.value.trim());
+        plain.value = String(number);
+        setStatus("Converted from dotted ASN.");
+      };
+
+      const update = source => {
+        lastEdited = source;
+        try {
+          source === plain ? convertFromPlain() : convertFromDotted();
+        } catch (error) {
+          setStatus(error.message, true);
+        }
+      };
+
+      plain.addEventListener("input", () => update(plain));
+      dotted.addEventListener("input", () => update(dotted));
+
+      copy.addEventListener("click", async () => {
+        const value = lastEdited === plain ? dotted.value : plain.value;
+        if (!value) {
+          setStatus("Nothing to copy.", true);
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(value);
+          setStatus("Result copied.");
+        } catch {
+          setStatus("Copy is unavailable in this browser.", true);
+        }
+      });
+
+      clear.addEventListener("click", () => {
+        plain.value = "";
+        dotted.value = "";
+        plain.focus();
+        setStatus("");
+      });
+    })();
+  </script>
+</body>
+</html>
