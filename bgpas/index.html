@@ -158,7 +158,8 @@
       </div>
 
       <div class="actions">
-        <button id="copy" type="button">Copy result</button>
+        <button id="copyPlain" type="button">Copy plain</button>
+        <button id="copyDotted" type="button">Copy dotted</button>
         <button id="clear" class="secondary" type="button">Clear</button>
       </div>
 
@@ -173,9 +174,9 @@
       const plain = document.getElementById("plain");
       const dotted = document.getElementById("dotted");
       const status = document.getElementById("status");
-      const copy = document.getElementById("copy");
+      const copyPlain = document.getElementById("copyPlain");
+      const copyDotted = document.getElementById("copyDotted");
       const clear = document.getElementById("clear");
-      let lastEdited = plain;
 
       const setStatus = (text, isError = false) => {
         status.textContent = text;
@@ -227,7 +228,6 @@
       };
 
       const update = source => {
-        lastEdited = source;
         try {
           source === plain ? convertFromPlain() : convertFromDotted();
         } catch (error) {
@@ -238,19 +238,22 @@
       plain.addEventListener("input", () => update(plain));
       dotted.addEventListener("input", () => update(dotted));
 
-      copy.addEventListener("click", async () => {
-        const value = lastEdited === plain ? dotted.value : plain.value;
+      const copyValue = async (field, name) => {
+        const value = field.value.trim();
         if (!value) {
-          setStatus("Nothing to copy.", true);
+          setStatus(`No ${name} ASN to copy.`, true);
           return;
         }
         try {
           await navigator.clipboard.writeText(value);
-          setStatus("Result copied.");
+          setStatus(`${name} ASN copied.`);
         } catch {
           setStatus("Copy is unavailable in this browser.", true);
         }
-      });
+      };
+
+      copyPlain.addEventListener("click", () => copyValue(plain, "Plain"));
+      copyDotted.addEventListener("click", () => copyValue(dotted, "Dotted"));
 
       clear.addEventListener("click", () => {
         plain.value = "";
