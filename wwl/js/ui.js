@@ -144,7 +144,7 @@
   function buildNode(n, depth) {
     const d = document.createElement('div');
     const hasKids = !!(n.children && n.children.length);
-    const collapsed = hasKids && depth >= 2;
+    const collapsed = hasKids && depth >= 3;
     d.className = 'dnode' + (collapsed ? ' collapsed' : '');
     const row = document.createElement('div');
     row.className = 'drow';

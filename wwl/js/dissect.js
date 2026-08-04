@@ -1846,35 +1846,52 @@
     const subtype = r.u8(); // 1
     const version = r.u8();
     m.proto = 'lacp';
-    const tlvs = [];
+    const tlvNodes = [];
     let actor = '';
     let guard = 0;
     while (r.remaining() >= 2 && guard++ < 4) {
       const t = r.u8(), len = r.u8();
-      if (len === 0) break; // Terminator
+      if (len === 0) { tlvNodes.push(node('Terminator', 'End of LACPDU', [r.p - 2, r.p])); break; }
       if (len < 20 || len - 20 > r.remaining()) break;
       if (t === 1 || t === 2) {
+        const tlvStart = r.p - 2;
         const sysPri = r.u16();
         const sysMac = WWL.macToString(r.bytes(6));
         const key = r.u16();
         const portPri = r.u16();
         const port = r.u16();
         const state = r.u8();
-        r.skip(3);
+        const reserved = r.bytes(3);
         const role = t === 1 ? 'Actor' : 'Partner';
-        const stateParts = [];
-        if (state & 0x01) stateParts.push('Activity');
-        if (state & 0x02) stateParts.push('Timeout');
-        if (state & 0x04) stateParts.push('Aggregation');
-        if (state & 0x08) stateParts.push('Synchronization');
-        if (state & 0x10) stateParts.push('Collecting');
-        if (state & 0x20) stateParts.push('Distributing');
+        const stateBits = [
+          [0, 'Activity', state & 0x01 ? 'Active' : 'Passive'],
+          [1, 'Timeout', state & 0x02 ? 'Short Timeout' : 'Long Timeout'],
+          [2, 'Aggregation', state & 0x04 ? 'Aggregation' : 'Individual'],
+          [3, 'Synchronization', state & 0x08 ? 'In Sync' : 'Out of Sync'],
+          [4, 'Collecting', state & 0x10 ? 'Collecting' : 'Not Collecting'],
+          [5, 'Distributing', state & 0x20 ? 'Distributing' : 'Not Distributing'],
+          [6, 'Defaulted', state & 0x40 ? 'Defaulted' : 'Not Defaulted'],
+          [7, 'Expired', state & 0x80 ? 'Expired' : 'Not Expired']
+        ];
         if (t === 1) {
           actor = 'System ' + sysPri + '/' + sysMac + ', Key ' + key + ', Port ' + port;
         }
-        tlvs.push({ role: role, text: 'System ' + sysPri + '/' + sysMac + ', Key ' + key + ', Port ' + port + (stateParts.length ? ', ' + stateParts.join('+') : ''), range: [r.p - 20, r.p] });
+        tlvNodes.push(node(role, '', [tlvStart, r.p], [
+          node('System Priority', sysPri, [tlvStart + 2, tlvStart + 4]),
+          node('System', sysMac, [tlvStart + 4, tlvStart + 10]),
+          node('Key', key, [tlvStart + 10, tlvStart + 12]),
+          node('Port Priority', portPri, [tlvStart + 12, tlvStart + 14]),
+          node('Port', port, [tlvStart + 14, tlvStart + 16]),
+          node('State', '0x' + WWL.u8hex(state), [tlvStart + 16, tlvStart + 17],
+            stateBits.map(function (b) {
+              let bits = '';
+              for (let bit = 7; bit >= 0; bit--) bits += (bit === b[0] ? '1' : '.');
+              return node(bits + ' = ' + b[1], b[2], [tlvStart + 16, tlvStart + 17]);
+            })),
+          node('Reserved', hexBytes(reserved), [tlvStart + 17, tlvStart + 20])
+        ]));
       } else {
-        r.skip(len - 20 + 20 - 20);
+        r.skip(Math.max(0, len - 2));
       }
     }
     m.info = 'Link Aggregation Control Protocol' + (actor ? ', ' + actor : '');
@@ -1882,7 +1899,7 @@
       tree.push(node('Link Aggregation Control Protocol', 'Version: ' + version, [p0, r.p], [
         node('Subtype', 'LACP (' + subtype + ')', [p0, p0 + 1]),
         node('Version', version, [p0 + 1, p0 + 2])
-      ].concat(tlvs.map(function (tlv) { return node(tlv.role, tlv.text, tlv.range); }))));
+      ].concat(tlvNodes)));
     }
   }
 
