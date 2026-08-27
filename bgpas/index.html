@@ -41,24 +41,24 @@
       background: var(--bg);
       color: var(--fg);
       display: grid;
-      place-items: center;
-      padding: 24px;
+      place-items: start center;
+      padding: 32px 24px 64px;
       line-height: 1.5;
     }
 
     main {
-      width: min(720px, 100%);
+      width: min(860px, 100%);
     }
 
     h1 {
       margin: 0 0 8px;
-      font-size: clamp(2rem, 7vw, 3.4rem);
+      font-size: clamp(2rem, 7vw, 3.2rem);
       line-height: 1.05;
       letter-spacing: 0;
     }
 
-    p {
-      margin: 0 0 24px;
+    .lead {
+      margin: 0 0 28px;
       color: var(--muted);
     }
 
@@ -127,10 +127,119 @@
       min-height: 24px;
       margin-top: 14px;
       color: var(--muted);
+      white-space: pre-line;
     }
 
     .status.error {
       color: var(--bad);
+    }
+
+    h2 {
+      margin: 44px 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .section-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .badge.private { background: #d1fae5; color: #065f46; }
+    .badge.doc { background: #dbeafe; color: #1e40af; }
+    .badge.reserved { background: #fee2e2; color: #991b1b; }
+    .badge.special { background: #ede9fe; color: #5b21b6; }
+    .badge.trans { background: #ffedd5; color: #9a3412; }
+    .badge.public { background: #e2e8f0; color: #334155; }
+
+    @media (prefers-color-scheme: dark) {
+      .badge.private { background: rgba(45, 212, 191, 0.18); color: #5eead4; }
+      .badge.doc { background: rgba(96, 165, 250, 0.18); color: #93c5fd; }
+      .badge.reserved { background: rgba(248, 113, 113, 0.18); color: #fca5a5; }
+      .badge.special { background: rgba(167, 139, 250, 0.18); color: #c4b5fd; }
+      .badge.trans { background: rgba(251, 146, 60, 0.18); color: #fdba74; }
+      .badge.public { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    td.num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      white-space: nowrap;
+    }
+
+    td.rfc {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    td.purpose {
+      color: var(--muted);
+    }
+
+    .footnote {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
 
     @media (max-width: 620px) {
@@ -143,7 +252,10 @@
 <body>
   <main>
     <h1>BGP ASN Converter</h1>
-    <p>Convert between AS plain integers and dotted 32-bit ASN notation.</p>
+    <p class="lead">
+      Convert between AS plain integers and dotted 32-bit ASN (asdot+) notation,
+      with automatic lookup of private, documentation, and reserved ranges.
+    </p>
 
     <section class="panel" aria-label="ASN converter">
       <div class="grid">
@@ -165,6 +277,127 @@
 
       <div id="status" class="status" role="status" aria-live="polite"></div>
     </section>
+
+    <h2>Private &amp; special-purpose AS numbers</h2>
+    <p class="section-note">
+      All RFC-defined private-use ranges and special reservations, as maintained in the
+      IANA AS number registries.
+    </p>
+
+    <div class="badges" aria-label="Legend">
+      <span class="badge private">Private use</span>
+      <span class="badge doc">Documentation</span>
+      <span class="badge reserved">Reserved</span>
+      <span class="badge trans">AS_TRANS</span>
+      <span class="badge special">Special purpose</span>
+      <span class="badge public">Public / globally unique</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>RFC-defined private AS ranges and special reserved AS numbers</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">AS numbers (asplain)</th>
+            <th scope="col">AS numbers (asdot+)</th>
+            <th scope="col">Reference</th>
+            <th scope="col">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge reserved">Reserved</span></td>
+            <td class="num">0</td>
+            <td class="num">0.0</td>
+            <td class="rfc">RFC 7607</td>
+            <td class="purpose">AS 0 is reserved and must not be used or propagated in BGP.</td>
+          </tr>
+          <tr>
+            <td><span class="badge special">Special purpose</span></td>
+            <td class="num">112</td>
+            <td class="num">0.112</td>
+            <td class="rfc">RFC 7534</td>
+            <td class="purpose">AS112 project: anycast sink for misdirected DNS queries.</td>
+          </tr>
+          <tr>
+            <td><span class="badge trans">AS_TRANS</span></td>
+            <td class="num">23456</td>
+            <td class="num">0.23456</td>
+            <td class="rfc">RFC 6793</td>
+            <td class="purpose">2-byte placeholder representing 4-byte ASNs in AS_PATH / AS4_PATH.</td>
+          </tr>
+          <tr>
+            <td><span class="badge doc">Documentation</span></td>
+            <td class="num">64496 – 64511</td>
+            <td class="num">0.64496 – 0.64511</td>
+            <td class="rfc">RFC 5398</td>
+            <td class="purpose">Reserved for documentation and sample code; not for production use.</td>
+          </tr>
+          <tr>
+            <td><span class="badge private">Private use</span></td>
+            <td class="num">64512 – 65534</td>
+            <td class="num">0.64512 – 0.65534</td>
+            <td class="rfc">RFC 6996</td>
+            <td class="purpose">1,023 private ASNs; must be removed from AS path attributes before advertising to the global Internet.</td>
+          </tr>
+          <tr>
+            <td><span class="badge reserved">Reserved</span></td>
+            <td class="num">65535</td>
+            <td class="num">0.65535</td>
+            <td class="rfc">RFC 7300</td>
+            <td class="purpose">Last 16-bit ASN; must not be advertised to the global Internet.</td>
+          </tr>
+          <tr>
+            <td><span class="badge doc">Documentation</span></td>
+            <td class="num">65536 – 65551</td>
+            <td class="num">1.0 – 1.15</td>
+            <td class="rfc">RFC 5398</td>
+            <td class="purpose">Reserved for documentation and sample code (4-byte); not for production use.</td>
+          </tr>
+          <tr>
+            <td><span class="badge reserved">Reserved</span></td>
+            <td class="num">65552 – 131071</td>
+            <td class="num">1.16 – 1.65535</td>
+            <td class="rfc">IANA</td>
+            <td class="purpose">Reserved by IANA (no RFC reference); not allocated to the RIRs.</td>
+          </tr>
+          <tr>
+            <td><span class="badge private">Private use</span></td>
+            <td class="num">4200000000 – 4294967294</td>
+            <td class="num">64086.59904 – 65535.65534</td>
+            <td class="rfc">RFC 6996</td>
+            <td class="purpose">94,967,295 private ASNs; must be removed from AS path attributes before advertising to the global Internet.</td>
+          </tr>
+          <tr>
+            <td><span class="badge reserved">Reserved</span></td>
+            <td class="num">4294967295</td>
+            <td class="num">65535.65535</td>
+            <td class="rfc">RFC 7300</td>
+            <td class="purpose">Last 32-bit ASN; must not be advertised to the global Internet.</td>
+          </tr>
+          <tr>
+            <td><span class="badge public">Public</span></td>
+            <td class="num">1 – 64495</td>
+            <td class="num">0.1 – 0.64495</td>
+            <td class="rfc">IANA / RIR</td>
+            <td class="purpose">Globally unique 16-bit ASNs; allocated by IANA to the RIRs.</td>
+          </tr>
+          <tr>
+            <td><span class="badge public">Public</span></td>
+            <td class="num">131072 – 4199999999</td>
+            <td class="num">2.0 – 64086.59903</td>
+            <td class="rfc">IANA / RIR</td>
+            <td class="purpose">Globally unique 4-byte ASNs; allocated by IANA to the RIRs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="footnote">
+      Sources: IANA “Special-Purpose Autonomous System (AS) Numbers” and “Autonomous System (AS) Numbers”
+      registries (last updated 2026-06-01); RFC 5398, RFC 6996, RFC 7300, RFC 7607, RFC 6793, and RFC 7534.
+    </p>
   </main>
 
   <script>
@@ -177,6 +410,20 @@
       const copyPlain = document.getElementById("copyPlain");
       const copyDotted = document.getElementById("copyDotted");
       const clear = document.getElementById("clear");
+
+      const categories = [
+        { name: "Reserved", rfc: "RFC 7607", note: "AS 0 is reserved; it must not be used or propagated in BGP.", match: n => n === 0 },
+        { name: "Special purpose", rfc: "RFC 7534", note: "AS112 project — anycast sink for misdirected DNS queries.", match: n => n === 112 },
+        { name: "AS_TRANS", rfc: "RFC 6793", note: "2-byte placeholder for 4-byte ASNs in AS_PATH / AS4_PATH.", match: n => n === 23456 },
+        { name: "Documentation", rfc: "RFC 5398", note: "For documentation and sample code; not for production use.", match: n => n >= 64496 && n <= 64511 },
+        { name: "Private use", rfc: "RFC 6996", note: "Must be removed from AS path attributes before advertising to the global Internet.", match: n => n >= 64512 && n <= 65534 },
+        { name: "Reserved", rfc: "RFC 7300", note: "Last 16-bit ASN; must not be advertised to the global Internet.", match: n => n === 65535 },
+        { name: "Documentation", rfc: "RFC 5398", note: "For documentation and sample code; not for production use.", match: n => n >= 65536 && n <= 65551 },
+        { name: "Reserved", rfc: "IANA (no RFC)", note: "Reserved by IANA; not allocated to the RIRs.", match: n => n >= 65552 && n <= 131071 },
+        { name: "Private use", rfc: "RFC 6996", note: "Must be removed from AS path attributes before advertising to the global Internet.", match: n => n >= 4200000000 && n <= 4294967294 },
+        { name: "Reserved", rfc: "RFC 7300", note: "Last 32-bit ASN; must not be advertised to the global Internet.", match: n => n === 4294967295 },
+        { name: "Public", rfc: "IANA / RIR", note: "Globally unique; allocated by IANA to the RIRs.", match: n => (n >= 1 && n <= 64495) || (n >= 131072 && n <= 4199999999) }
+      ];
 
       const setStatus = (text, isError = false) => {
         status.textContent = text;
@@ -205,6 +452,18 @@
 
       const toDotted = number => `${Math.floor(number / 65536)}.${number % 65536}`;
 
+      const describe = number =>
+        categories.find(category => category.match(number)) || {
+          name: "Public",
+          rfc: "IANA / RIR",
+          note: "Globally unique; allocated by IANA to the RIRs."
+        };
+
+      const formatStatus = number => {
+        const category = describe(number);
+        return `AS ${number} (${toDotted(number)})\n${category.name} · ${category.rfc} — ${category.note}`;
+      };
+
       const convertFromPlain = () => {
         if (!plain.value.trim()) {
           dotted.value = "";
@@ -213,7 +472,7 @@
         }
         const number = parsePlain(plain.value.trim());
         dotted.value = toDotted(number);
-        setStatus("Converted from plain ASN.");
+        setStatus(formatStatus(number));
       };
 
       const convertFromDotted = () => {
@@ -224,7 +483,7 @@
         }
         const number = parseDotted(dotted.value.trim());
         plain.value = String(number);
-        setStatus("Converted from dotted ASN.");
+        setStatus(formatStatus(number));
       };
 
       const update = source => {
